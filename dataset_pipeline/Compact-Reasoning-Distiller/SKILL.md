@@ -5,34 +5,76 @@ description: Distill scratchblocks pseudocode into high-quality JSONL with deep 
 
 # Compact Reasoning Distiller Skill
 
-Use this skill when the user wants to convert scratchblocks code into distilled reasoning JSONL entries with `<think>` tags.
+Process Scratch projects one-by-one from the local ScratchRepository. Each project gets a dataset_entry.json with reasoning trace.
 
-## Workflow
+## Tools
 
-1. Read the target scratchblocks file or raw `.sb3` project from the dataset pipeline.
-2. Analyze the algorithmic structure: control flow, data structures, custom blocks, and edge cases.
-3. Generate a single JSONL entry containing:
-   - `instruction`: the original prompt or project description
-   - `input`: scratchblocks pseudocode
-   - `output`: final answer or result
-   - `thought`: deep reasoning trace wrapped in `<think>` tags, covering algorithm decomposition, design decisions, and complexity analysis
-4. Write the entry to the output JSONL file.
-5. Destroy the intermediate data (read-and-destroy pattern) to keep memory clean.
+### get_unprocessed_id.py
 
-## Output Schema
+Returns a random project ID that has metadata.json + project.scratchblocks but no dataset_entry.json.
+
+```bash
+python dataset_pipeline/Compact-Reasoning-Distiller/get_unprocessed_id.py
+```
+
+Output: a numeric project ID string, or "NONE" if all done.
+
+### merge_dataset.py
+
+Combines all dataset_entry.json files into a single JSONL file.
+
+```bash
+python dataset_pipeline/Compact-Reasoning-Distiller/merge_dataset.py
+```
+
+## Per-Project Workflow
+
+1. Run `get_unprocessed_id.py` to get next project ID
+2. Read `{REPO}/{ID}/metadata.json` for project context (title, author, category)
+3. Read `{REPO}/{ID}/project.scratchblocks` for the actual code
+4. Analyze the algorithm: control flow, data structures, custom blocks, edge cases
+5. Write `{REPO}/{ID}/dataset_entry.json` with this schema
+6. Repeat from step 1 until "NONE"
+
+## Dataset Entry Schema
 
 ```json
 {
-  "instruction": "string",
-  "input": "string (scratchblocks code)",
-  "output": "string (expected result)",
-  "thought": "<think>...algorithmic reasoning trace...</think>"
+  "instruction": "Analyze this Scratch project and explain its algorithm.",
+  "input": "<scratchblocks code here>",
+  "output": "<brief summary of what the project does>",
+  "thought": "<think><reasoning trace></think>",
+  "metadata": {
+    "project_id": "12345678",
+    "project_title": "A* Pathfinding Visualizer",
+    "original_author": "username",
+    "tech_category": "A* Pathfinding",
+    "complexity_tags": ["graph", "heuristic", "pathfinding"]
+  }
 }
+```
+
+## Reasoning Trace Requirements
+
+Each `<think>` block must cover:
+
+1. **Goal decomposition** - what the project does, broken into sub-tasks
+2. **Algorithm identification** - core algorithm or pattern used
+3. **Key blocks analysis** - which Scratch blocks implement the logic
+4. **Edge cases** - boundary conditions handled
+5. **Complexity** - time/space complexity estimate
+
+## Environment
+
+Set `SCRATCH_REPO` env var if not using default path:
+
+```bash
+export SCRATCH_REPO="/path/to/ScratchRepository"
 ```
 
 ## Important
 
-- One item at a time. Do not batch.
-- Each reasoning trace must cover: goal decomposition, key algorithm used, edge cases handled, and time/space complexity.
-- Use `<think>` tags consistently, no variations.
-- After processing, discard the source data immediately.
+- Process one project at a time
+- Do not skip projects - every entry counts
+- Use `<think>` tags consistently
+- After writing dataset_entry.json, the project is marked done automatically
