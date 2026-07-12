@@ -1,0 +1,33 @@
+{
+    "name": "parse-sb3-blocks",
+    "version": "1.0.0",
+    "description": "Parse sb3 blocks and generate scratchblocks text.",
+    "main": "dist/parse-sb3-blocks.cjs",
+    "module": "dist/parse-sb3-blocks.module.js",
+    "bin": {
+        "sb3-to-scratchblocks": "./cli.js"
+    },
+    "scripts": {
+        "build": "rollup -c",
+        "start": "node cli.js"
+    },
+    "keywords": [
+        "scratch",
+        "sb3",
+        "scratchblocks"
+    ],
+    "author": "NeuronPulse",
+    "license": "BSD-3-Clause",
+    "devDependencies": {
+        "@rollup/plugin-babel": "^6.0.2",
+        "@rollup/plugin-terser": "^0.1.0",
+        "rollup": "^3.2.5",
+        "scratch-l10n": "^3.15.20221108032110",
+        "scratch-translate-extension-languages": "^0.0.20191118205314"
+    },
+    "type": "module",
+    "files": [
+        "dist",
+        "cli.js"
+    ]
+}

@@ -52,9 +52,16 @@ MoECat Series Models
 ```
 MoECat-LLM/
 ├── dataset_pipeline/
-│   └── scratch_scraper.py       # Scratch project batch scraper with metadata extraction
-├── fine_tune/                   # (planned) Unsloth QLoRA training scripts
-├── examples/                    # (planned) Advanced Scratch algorithm examples
+│   ├── scratch_scraper.py           # Scratch project batch scraper with metadata extraction
+│   ├── parse-sb3-blocks/            # Node.js sb3-to-scratchblocks converter
+│   │   ├── cli.js                   # CLI entry point
+│   │   ├── src/                     # Parser, block mapping, sanitizer source
+│   │   ├── rollup.config.js         # Build config
+│   │   └── package.json
+│   └── Compact-Reasoning-Distiller/ # Agent skill for CoT distillation
+│       └── SKILL.md
+├── fine_tune/                       # (planned) Unsloth QLoRA training scripts
+├── examples/                        # (planned) Advanced Scratch algorithm examples
 ├── LICENSE
 └── README.md
 ```
