@@ -2,7 +2,7 @@ import os
 import sys
 import random
 
-REPO_ROOT = os.environ.get("SCRATCH_REPO", "/content/drive/MyDrive/ScratchRepository")
+REPO_ROOT = os.environ.get("SCRATCH_REPO", "/mnt/googledrive/ScratchRepository")
 
 
 def get_unprocessed():

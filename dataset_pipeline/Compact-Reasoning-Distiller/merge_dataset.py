@@ -3,7 +3,7 @@ import sys
 import json
 from collections import Counter
 
-REPO_ROOT = os.environ.get("SCRATCH_REPO", "/content/drive/MyDrive/ScratchRepository")
+REPO_ROOT = os.environ.get("SCRATCH_REPO", "/mnt/googledrive/ScratchRepository")
 OUTPUT_FILE = os.environ.get("OUTPUT_FILE", "moecat_dataset.jsonl")
 
 
