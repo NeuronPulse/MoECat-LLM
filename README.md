@@ -60,6 +60,7 @@ MoECat-LLM/
 │   │   └── package.json
 │   └── Compact-Reasoning-Distiller/ # Agent skill for CoT distillation
 │       ├── SKILL.md                 # Skill definition and workflow
+│       ├── sync_gdrive.py           # Tool: rclone sync from Google Drive
 │       ├── get_unprocessed_id.py    # Tool: get next unprocessed project ID
 │       └── merge_dataset.py         # Tool: merge all entries into final JSONL
 ├── fine_tune/                       # (planned) Unsloth QLoRA training scripts

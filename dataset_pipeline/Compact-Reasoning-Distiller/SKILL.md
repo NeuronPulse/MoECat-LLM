@@ -5,9 +5,32 @@ description: Distill scratchblocks pseudocode into high-quality JSONL with deep 
 
 # Compact Reasoning Distiller Skill
 
-Process Scratch projects one-by-one from the local ScratchRepository. Each project gets a dataset_entry.json with reasoning trace.
+Process Scratch projects one-by-one from a local ScratchRepository synced via rclone.
+
+## Setup
+
+1. Install rclone: https://rclone.org/install/
+2. Configure rclone remote for Google Drive:
+   ```bash
+   rclone config
+   # Create remote named "gdrive" pointing to your Google Drive ScratchRepository
+   ```
+3. Set environment variables (optional):
+   ```bash
+   export RCLONE_REMOTE="gdrive:ScratchRepository"
+   export SCRATCH_REPO="./ScratchRepository"
+   ```
 
 ## Tools
+
+### sync_gdrive.py
+
+Sync project files from Google Drive to local workspace.
+
+```bash
+python dataset_pipeline/Compact-Reasoning-Distiller/sync_gdrive.py
+python dataset_pipeline/Compact-Reasoning-Distiller/sync_gdrive.py --status
+```
 
 ### get_unprocessed_id.py
 
@@ -27,14 +50,26 @@ Combines all dataset_entry.json files into a single JSONL file.
 python dataset_pipeline/Compact-Reasoning-Distiller/merge_dataset.py
 ```
 
-## Per-Project Workflow
+## Agent Workflow
+
+```
+1. sync_gdrive.py        # pull latest from Google Drive
+2. get_unprocessed_id.py  # get next ID
+3. Read metadata.json + project.scratchblocks
+4. Analyze algorithm, generate reasoning
+5. Write dataset_entry.json (project marked done)
+6. Repeat 2-5 until "NONE"
+7. merge_dataset.py       # combine all entries
+```
+
+## Per-Project Processing
 
 1. Run `get_unprocessed_id.py` to get next project ID
-2. Read `{REPO}/{ID}/metadata.json` for project context (title, author, category)
-3. Read `{REPO}/{ID}/project.scratchblocks` for the actual code
-4. Analyze the algorithm: control flow, data structures, custom blocks, edge cases
-5. Write `{REPO}/{ID}/dataset_entry.json` with this schema
-6. Repeat from step 1 until "NONE"
+2. Read `{SCRATCH_REPO}/{ID}/metadata.json` for project context
+3. Read `{SCRATCH_REPO}/{ID}/project.scratchblocks` for the code
+4. Analyze the algorithm: control flow, data structures, custom blocks
+5. Write `{SCRATCH_REPO}/{ID}/dataset_entry.json`
+6. Repeat until "NONE"
 
 ## Dataset Entry Schema
 
@@ -64,17 +99,9 @@ Each `<think>` block must cover:
 4. **Edge cases** - boundary conditions handled
 5. **Complexity** - time/space complexity estimate
 
-## Environment
-
-Set `SCRATCH_REPO` env var if not using default path:
-
-```bash
-export SCRATCH_REPO="/path/to/ScratchRepository"
-```
-
 ## Important
 
+- Run sync_gdrive.py periodically to get new projects
 - Process one project at a time
-- Do not skip projects - every entry counts
 - Use `<think>` tags consistently
-- After writing dataset_entry.json, the project is marked done automatically
+- dataset_entry.json existence = project marked done
