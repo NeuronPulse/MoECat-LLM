@@ -102,7 +102,7 @@ async function scanFolder(folderPath, locale = 'en') {
         const entryPath = join(folderPath, entry);
         if (!statSync(entryPath).isDirectory() || !entry.match(/^\d+$/)) continue;
 
-        const sb3Path = join(entryPath, 'project.sb3');
+        const sb3Path = join(entryPath, 'project.json');
         const outputPath = join(entryPath, 'project.scratchblocks');
 
         if (!existsSync(sb3Path)) {

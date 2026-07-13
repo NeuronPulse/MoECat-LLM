@@ -4,7 +4,6 @@ import json
 import re
 import time
 import os
-import subprocess
 from tqdm import tqdm
 
 BASE_API = "api.scratch.mit.edu"
@@ -165,16 +164,6 @@ def run_pipeline(target_count_per_keyword=200):
 
                             with open(f"{project_dir}/metadata.json", "w", encoding="utf-8") as f_meta:
                                 json.dump(metadata_payload, f_meta, ensure_ascii=False, indent=2)
-
-                            cli_path = os.path.join(os.path.dirname(__file__), "parse-sb3-blocks", "cli.js")
-                            scratchblocks_path = f"{project_dir}/project.scratchblocks"
-                            try:
-                                subprocess.run(
-                                    ["node", cli_path, save_path, scratchblocks_path],
-                                    check=True, capture_output=True, timeout=30,
-                                )
-                            except Exception as e:
-                                print(f"[*] Parse failed for {p_id}: {e}")
 
                             download_registry[p_id] = {
                                 "title": title,
