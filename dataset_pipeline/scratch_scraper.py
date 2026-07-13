@@ -170,7 +170,7 @@ def run_pipeline(target_count_per_keyword=200):
                             scratchblocks_path = f"{project_dir}/project.scratchblocks"
                             try:
                                 subprocess.run(
-                                    ["node", cli_path, save_path, "-o", scratchblocks_path],
+                                    ["node", cli_path, save_path, scratchblocks_path],
                                     check=True, capture_output=True, timeout=30,
                                 )
                             except Exception as e:

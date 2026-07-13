@@ -4,6 +4,7 @@
     "description": "Parse sb3 blocks and generate scratchblocks text.",
     "main": "dist/parse-sb3-blocks.cjs",
     "module": "dist/parse-sb3-blocks.module.js",
+    "browser": "dist/parse-sb3-blocks.min.js",
     "bin": {
         "sb3-to-scratchblocks": "./cli.js"
     },
@@ -18,6 +19,9 @@
     ],
     "author": "NeuronPulse",
     "license": "BSD-3-Clause",
+    "dependencies": {
+        "adm-zip": "^0.5.10"
+    },
     "devDependencies": {
         "@rollup/plugin-babel": "^6.0.2",
         "@rollup/plugin-terser": "^0.1.0",
